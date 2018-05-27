@@ -37,17 +37,17 @@ class Main extends PluginBase implements Listener {
 		$this->saveDefaultConfig();
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$cfg->save();
-		$this->getLogger()->info(C::GREEN."Core v0.0.5 by FreeGamingHere Enabled!");
+		$this->getLogger()->info("Core v0.0.5 by FreeGamingHere Enabled!");
 		$this->ZMusicBox = $this->getServer()->getPluginManager()->getPlugin("ZMusicBox");
 		$this->getServer()->getDefaultLevel()->setTime(1000);
 		$this->getServer()->getDefaultLevel()->stopTime();
 	}
 
 	public function onDisable(){
-		$this->getLogger()->info(C::GREEN."Core v0.0.5 by FreeGamingHere Disabled!");
+		$this->getLogger()->info("Core v0.0.5 by FreeGamingHere Disabled!");
 	}
 
-	public function MainItems(Player $player){
+	public function mainItems(Player $player){
 		$player->getInventory()->clearAll();
 		$player->getInventory()->setItem(0, Item::get(345)->setCustomName(C::BOLD.C::GREEN."Teleporter"));
 		$player->getInventory()->setItem(2, Item::get(339)->setCustomName(C::BOLD.C::GOLD."Info"));
@@ -59,7 +59,7 @@ class Main extends PluginBase implements Listener {
 		$player->setFood(20);
 	}
 	
-	public function TeleportItems(Player $player){	  //Teleport
+	public function teleportItems(Player $player){	  //Teleport
 		$player->getInventory()->clearAll();
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$game1 = $cfg->get("Game-1-Name");
@@ -78,17 +78,23 @@ class Main extends PluginBase implements Listener {
 		$player = $event->getPlayer();
 		$name = $player->getName();
 		$ds = $this->getServer()->getDefaultLevel()->getSafeSpawn();
+		$x = $ds->getX() + 0.5;
+		$y = $ds->getY() + 0.5;
+		$z = $ds->getZ() + 0.5;
 		$player->setGamemode(2);
-		$player->teleport($ds);
+		$player->teleport(new Vector3($x, $y, $z));
 		$event->setJoinMessage("");
-		$this->MainItems($player);
+		$this->mainItems($player);
 		if($player->isOP()){
-			$event->setJoinMessage(C::RED.$name.C::AQUA." joined the game!");
+			$event->setJoinMessage(C::GREEN.$name.C::AQUA." has joined the game!");
 		}
 	}
 
 	public function onQuit(PlayerQuitEvent $event){
 		$event->setQuitMessage("");
+		if($player->isOP()){
+			$event->setQuitMessage(C::GREEN.$name.C::AQUA." has left the game!");
+		}
 	}
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
@@ -110,8 +116,7 @@ class Main extends PluginBase implements Listener {
 					$sender->sendMessage($this->prefix . "§aUsage: /info <ranks|server>");
 					return true;
 				}
-			}
-			if(empty($args[0])){
+			} else {
 				$sender->sendMessage($this->prefix . "§aUsage: /info <ranks|server>");
 				return true;
 			}
@@ -131,7 +136,7 @@ class Main extends PluginBase implements Listener {
 		$game3 = $cfg->get("Game-3-Name");
 
 		if($item->getName() == C::BOLD.C::GREEN."Teleporter"){
-			$this->TeleportItems($player);
+			$this->teleportItems($player);
 		}
 
 		elseif ($item->getName() == C::BOLD . C::GOLD."Info"){
@@ -149,11 +154,11 @@ class Main extends PluginBase implements Listener {
 		}
 
 		elseif ($item->getName() == C::BOLD . C::RED."Back"){
-			$this->MainItems($player);
+			$this->mainItems($player);
 		}
 
 		elseif ($item->getName() == C::BOLD.C::GREEN.$game1){
-			$this->MainItems($player);
+			$this->mainItems($player);
 			$x = $cfg->get("Game-1-X");
 			$y = $cfg->get("Game-1-Y");
 			$z = $cfg->get("Game-1-Z");
@@ -161,7 +166,7 @@ class Main extends PluginBase implements Listener {
 		}
 
 		elseif ($item->getName() == C::BOLD.C::GOLD.$game2){
-			$this->MainItems($player);
+			$this->mainItems($player);
 			$x = $cfg->get("Game-2-X");
 			$y = $cfg->get("Game-2-Y");
 			$z = $cfg->get("Game-2-Z");
@@ -169,7 +174,7 @@ class Main extends PluginBase implements Listener {
 		}
 	
 		elseif ($item->getName() == C::BOLD.C::BLUE.$game3){
-			$this->MainItems($player);
+			$this->mainItems($player);
 			$x = $cfg->get("Game-3-X");
 			$y = $cfg->get("Game-3-Y");
 			$z = $cfg->get("Game-3-Z");
