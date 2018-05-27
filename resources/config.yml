@@ -1,0 +1,28 @@
+---
+#################################
+# Configuration for Core v0.0.5 #
+# Plugin Made by FreeGamingHere #
+#################################
+# Commands:
+
+info-ranks-cmd: "Admin: $1"
+info-server-cmd: "Welcome to our server! Shop: shop.servername.net"
+
+# Item names (for the teleport/warp items):
+
+Game-1-Name: Survival
+Game-2-Name: Plots
+Game-3-Name: SkyPvP
+
+# Positions (for the teleport/warp items):
+
+Game-1-X: 0
+Game-1-Y: 0
+Game-1-Z: 0
+Game-2-X: 0
+Game-2-Y: 0
+Game-2-Z: 0
+Game-3-X: 0
+Game-3-Y: 0
+Game-3-Z: 0
+...
