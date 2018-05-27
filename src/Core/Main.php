@@ -34,11 +34,7 @@ class Main extends PluginBase implements Listener {
 	public function onEnable(){
 		@mkdir($this->getDataFolder());
 		$this->saveResource("config.yml");
-		$this->saveDefaultConfig();
-		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-		$cfg->save();
 		$this->getLogger()->info("Core v0.0.5 by FreeGamingHere Enabled!");
-		$this->ZMusicBox = $this->getServer()->getPluginManager()->getPlugin("ZMusicBox");
 		$this->getServer()->getDefaultLevel()->setTime(1000);
 		$this->getServer()->getDefaultLevel()->stopTime();
 	}
