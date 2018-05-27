@@ -1,8 +1,10 @@
 name: Core
 main: Core\Main
 version: 0.0.5
+description: "A core plugin for your server"
 api: [3.0.0-ALPHA7, 3.0.0-ALPHA8, 3.0.0-ALPHA9, 3.0.0-ALPHA10, 3.0.0-ALPHA11, 3.0.0-ALPHA12, 3.0.0-ALPHA13, 3.0.0-ALPHA14, 3.0.0-ALPHA15, 3.0.0-ALPHA16, 3.0.0-ALPHA17, 3.0.0-ALPHA18, 3.0.0-ALPHA19, 3.0.0-ALPHA20]
 author: FreeGamingHere
 commands:
     info:
         description: "Information about the server or the ranks"
+        usage: "/info <ranks|server>"
