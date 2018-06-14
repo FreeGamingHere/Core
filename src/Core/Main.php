@@ -5,7 +5,6 @@ namespace Core;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\level\particle\FlameParticle;
 use pocketmine\plugin\PluginBase;
-use pocketmine\scheduler\PluginTask;
 use pocketmine\math\Vector2;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\IntTag;
@@ -34,6 +33,7 @@ class Main extends PluginBase implements Listener {
 	public function onEnable(){
 		@mkdir($this->getDataFolder());
 		$this->saveResource("config.yml");
+		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->getLogger()->info("Core v0.0.5 by FreeGamingHere Enabled!");
 		$this->getServer()->getDefaultLevel()->setTime(1000);
 		$this->getServer()->getDefaultLevel()->stopTime();
