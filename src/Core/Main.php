@@ -79,17 +79,19 @@ class Main extends PluginBase implements Listener {
 		$z = $ds->getZ() + 0.5;
 		$player->setGamemode(2);
 		$player->teleport(new Vector3($x, $y, $z));
-		$event->setJoinMessage("");
 		$this->mainItems($player);
 		if($player->isOP()){
 			$event->setJoinMessage(C::GREEN.$name.C::AQUA." has joined the game!");
+		} else {
+			$event->setJoinMessage("");
 		}
 	}
 
 	public function onQuit(PlayerQuitEvent $event){
-		$event->setQuitMessage("");
 		if($player->isOP()){
 			$event->setQuitMessage(C::GREEN.$name.C::AQUA." has left the game!");
+		} else {
+			$event->setQuitMessage("");
 		}
 	}
 
@@ -99,12 +101,12 @@ class Main extends PluginBase implements Listener {
 		$server = $cfg->get("info-server-cmd");
 		$ranks = $cfg->get("info-ranks-cmd");
 		if($command->getName() === "info"){
-			if(!empty($args[0]) && count($args) = 1){
-				if($args[0] == "ranks"){
+			if(!empty($args[0]) && count($args) === 1){
+				if($args[0] === "ranks"){
 					$sender->sendMessage($this->prefix . $ranks);
 					return true;
 				}
-				if($args[0] == "server"){
+				if($args[0] === "server"){
 					$sender->sendMessage($this->prefix . $server);
 					return true;
 				} else {
