@@ -55,7 +55,7 @@ class Main extends PluginBase implements Listener {
 		$player->setFood(20);
 	}
 	
-	public function teleportItems(Player $player){	  //Teleport
+	public function teleportItems(Player $player){
 		$player->getInventory()->clearAll();
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$game1 = $cfg->get("Game-1-Name");
@@ -70,7 +70,7 @@ class Main extends PluginBase implements Listener {
 		$player->setFood(20);
 	}
 
-	public function onJoin(PlayerJoinEvent $event){	 //OnJoin
+	public function onJoin(PlayerJoinEvent $event){
 		$player = $event->getPlayer();
 		$name = $player->getName();
 		$ds = $this->getServer()->getDefaultLevel()->getSafeSpawn();
@@ -98,9 +98,8 @@ class Main extends PluginBase implements Listener {
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$server = $cfg->get("info-server-cmd");
 		$ranks = $cfg->get("info-ranks-cmd");
-		switch ($command->getName()){
-			case "info":
-			if(!empty($args[0])){
+		if($command->getName() === "info"){
+			if(!empty($args[0]) && count($args) = 1){
 				if($args[0] == "ranks"){
 					$sender->sendMessage($this->prefix . $ranks);
 					return true;
@@ -116,7 +115,6 @@ class Main extends PluginBase implements Listener {
 				$sender->sendMessage($this->prefix . "§aUsage: /info <ranks|server>");
 				return true;
 			}
-			return true;
 		} 
 	}
 
