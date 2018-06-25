@@ -5,7 +5,7 @@
 #################################
 # Commands:
 
-info-ranks-cmd: "Admin: $1"
+info-ranks-cmd: "Admin: $2\nMod: $1\nVIP: Vote"
 info-server-cmd: "Welcome to our server! Shop: shop.servername.net"
 
 # Item names (for the teleport/warp items):
@@ -25,4 +25,8 @@ Game-2-Z: 0
 Game-3-X: 0
 Game-3-Y: 0
 Game-3-Z: 0
+
+# Default gamemode (when you join the server):
+
+DefaultGamemode: 2
 ...
