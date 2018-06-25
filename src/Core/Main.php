@@ -71,13 +71,14 @@ class Main extends PluginBase implements Listener {
 	}
 
 	public function onJoin(PlayerJoinEvent $event){
+		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$player = $event->getPlayer();
 		$name = $player->getName();
 		$ds = $this->getServer()->getDefaultLevel()->getSafeSpawn();
 		$x = $ds->getX() + 0.5;
 		$y = $ds->getY() + 0.5;
 		$z = $ds->getZ() + 0.5;
-		$player->setGamemode(2);
+		$player->setGamemode((int)$cfg->get("DefaultGamemode"));
 		$player->teleport(new Vector3($x, $y, $z));
 		$this->mainItems($player);
 		if($player->isOP()){
