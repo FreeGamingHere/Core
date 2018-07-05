@@ -65,7 +65,7 @@ class Main extends PluginBase implements Listener {
 		$player->getInventory()->setItem(0, Item::get(399)->setCustomName(C::RESET.$game1));
 		$player->getInventory()->setItem(2, Item::get(378)->setCustomName(C::RESET.$game2));
 		$player->getInventory()->setItem(4, Item::get(381)->setCustomName(C::RESET.$game3));
-		$player->getInventory()->setItem(8, Item::get(355)->setCustomName(C::RESET."Back"));
+		$player->getInventory()->setItem(8, Item::get(355)->setCustomName(C::RESET.C::BOLD.C::RED."Back"));
 		$player->removeAllEffects();
 		$player->setHealth(20);
 		$player->setFood(20);
@@ -74,7 +74,6 @@ class Main extends PluginBase implements Listener {
 	public function onJoin(PlayerJoinEvent $event){
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$player = $event->getPlayer();
-		$name = $player->getName();
 		$ds = $this->getServer()->getDefaultLevel()->getSafeSpawn();
 		$x = $ds->getX() + 0.5;
 		$y = $ds->getY() + 0.5;
@@ -82,16 +81,17 @@ class Main extends PluginBase implements Listener {
 		$player->setGamemode((int)$cfg->get("DefaultGamemode"));
 		$player->teleport(new Vector3($x, $y, $z));
 		$this->mainItems($player);
-		if($player->isOP()){
-			$event->setJoinMessage(C::GREEN.$name.C::AQUA." has joined the game!");
+		if($player->isOp()){
+			$event->setJoinMessage(C::GREEN.$player->getName().C::AQUA." has joined the game!");
 		} else {
 			$event->setJoinMessage("");
 		}
 	}
 
 	public function onQuit(PlayerQuitEvent $event){
-		if($player->isOP()){
-			$event->setQuitMessage(C::GREEN.$name.C::AQUA." has left the game!");
+		$player = $event->getPlayer();
+		if($player->isOp()){
+			$event->setQuitMessage(C::GREEN.$player->getName().C::AQUA." has left the game!");
 		} else {
 			$event->setQuitMessage("");
 		}
