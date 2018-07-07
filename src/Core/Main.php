@@ -6,6 +6,7 @@ namespace Core;
 //use pocketmine\event\player\PlayerMoveEvent;
 //use pocketmine\level\particle\FlameParticle;
 use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\Plugin;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\IntTag;
 use pocketmine\event\Listener;
@@ -30,25 +31,31 @@ class Main extends PluginBase implements Listener {
 	
 	public $prefix = C::GRAY."[".C::AQUA."Lobby".C::GRAY."] ";
 
-	public function onEnable(){
-		@mkdir($this->getDataFolder());
-		$this->saveResource("config.yml");
-		$this->getServer()->getPluginManager()->registerEvents($this, $this);
-		$this->getLogger()->info("Core v0.1.0 by FreeGamingHere Enabled!");
-		$this->getServer()->getDefaultLevel()->setTime(1000);
-		$this->getServer()->getDefaultLevel()->stopTime();
+	public function onEnable() : void{
+		$this->ZMusicBox = $this->getServer()->getPluginManager()->getPlugin("ZMusicBox");
+		if($this->ZMusicBox instanceof Plugin){
+			@mkdir($this->getDataFolder());
+			$this->saveResource("config.yml");
+			$this->getServer()->getPluginManager()->registerEvents($this, $this);
+			$this->getLogger()->info("Core v0.5.0 by FreeGamingHere Enabled!");
+			$this->getServer()->getDefaultLevel()->setTime(1000);
+			$this->getServer()->getDefaultLevel()->stopTime();
+		} else {
+			$this->getLogger()->info("ZMusicBox not found! Disabling Core v0.5.0...");
+			$this->setEnabled(false);
+		}
 	}
 
-	public function onDisable(){
-		$this->getLogger()->info("Core v0.1.0 by FreeGamingHere Disabled!");
+	public function onDisable() : void{
+		$this->getLogger()->info("Core v0.5.0 by FreeGamingHere Disabled!");
 	}
 
-	public function mainItems(Player $player){
+	public function mainItems(Player $player) : void{
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getInventory()->setItem(0, Item::get(345)->setCustomName(C::RESET.C::BOLD.C::GREEN."Teleporter"));
 		$player->getInventory()->setItem(2, Item::get(339)->setCustomName(C::RESET.C::BOLD.C::GOLD."Info"));
-		$player->getInventory()->setItem(4, Item::get(288)->setCustomName(C::RESET.C::BOLD.C::BLUE."Enable your Fly"));
+		$player->getInventory()->setItem(4, Item::get(288)->setCustomName(C::RESET.C::BOLD.C::GREEN."Enable your Fly"));
 		$player->getInventory()->setItem(6, Item::get(280)->setCustomName(C::RESET.C::BOLD.C::YELLOW."Hide ".C::GREEN."Players"));
 		$player->getInventory()->setItem(8, Item::get(360)->setCustomName(C::RESET.C::BOLD.C::GREEN."Next Song"));
 		$player->removeAllEffects();
@@ -56,7 +63,7 @@ class Main extends PluginBase implements Listener {
 		$player->setFood(20);
 	}
 	
-	public function teleportItems(Player $player){
+	public function teleportItems(Player $player) : void{
 		$player->getInventory()->clearAll();
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$game1 = $cfg->get("Game-1-Name");
@@ -71,7 +78,7 @@ class Main extends PluginBase implements Listener {
 		$player->setFood(20);
 	}
 
-	public function onJoin(PlayerJoinEvent $event){
+	public function onJoin(PlayerJoinEvent $event) : void{
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$player = $event->getPlayer();
 		$ds = $this->getServer()->getDefaultLevel()->getSafeSpawn();
@@ -88,7 +95,7 @@ class Main extends PluginBase implements Listener {
 		}
 	}
 
-	public function onQuit(PlayerQuitEvent $event){
+	public function onQuit(PlayerQuitEvent $event) : void{
 		$player = $event->getPlayer();
 		if($player->isOp()){
 			$event->setQuitMessage(C::GREEN.$player->getName().C::AQUA." has left the game!");
@@ -97,7 +104,7 @@ class Main extends PluginBase implements Listener {
 		}
 	}
 
-	public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool{
+	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
 
 		$cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 		$server = $cfg->get("info-server-cmd");
@@ -122,7 +129,7 @@ class Main extends PluginBase implements Listener {
 		} 
 	}
 
-	public function onInteract(PlayerInteractEvent $event){
+	public function onInteract(PlayerInteractEvent $event) : void{
 		$player = $event->getPlayer();
 		$name = $player->getName();
 		$item = $player->getInventory()->getItemInHand();
@@ -139,15 +146,17 @@ class Main extends PluginBase implements Listener {
 		} elseif ($item->getName() === C::RESET.C::BOLD . C::GOLD."Info"){
 			$player->sendMessage($this->prefix . C::GREEN . "Usage: /info <ranks|server>");
 			
-		} elseif ($item->getName() === C::RESET.C::BOLD.C::BLUE."Enable your Fly"){
+		} elseif ($item->getName() === C::RESET.C::BOLD.C::GREEN."Enable your Fly"){
 			$player->setAllowFlight(true);
 			$player->setFlying(true);
-			$player->getInventory()->setItem(4, Item::get(288)->setCustomName(C::RESET.C::BOLD.C::BLUE."Disable your Fly"));
+			$player->sendMessage($this->prefix . C::GREEN . "You disabled your fly!");
+			$player->getInventory()->setItem(4, Item::get(288)->setCustomName(C::RESET.C::BOLD.C::RED."Disable your Fly"));
 			
-		} elseif ($item->getName() === C::RESET.C::BOLD.C::BLUE."Disable your Fly"){
+		} elseif ($item->getName() === C::RESET.C::BOLD.C::RED."Disable your Fly"){
 			$player->setAllowFlight(false);
 			$player->setFlying(false);
-			$player->getInventory()->setItem(4, Item::get(288)->setCustomName(C::RESET.C::BOLD.C::BLUE."Enable your Fly"));
+			$player->sendMessage($this->prefix . C::RED . "You disabled your fly!");
+			$player->getInventory()->setItem(4, Item::get(288)->setCustomName(C::RESET.C::BOLD.C::GREEN."Enable your Fly"));
 			
 		} elseif ($item->getName() === C::RESET.C::BOLD.C::RED."Back"){
 			$this->mainItems($player);
@@ -192,7 +201,7 @@ class Main extends PluginBase implements Listener {
 			}
 			
 		} elseif ($item->getName() === C::RESET.C::BOLD.C::GREEN."Next Song"){
-			$this->getServer()->getPluginManager()->getPlugin("ZMusicBox")->StartNewTask();
+			$this->ZMusicBox->StartNewTask();
 			
 		}
 	}
@@ -203,13 +212,13 @@ class Main extends PluginBase implements Listener {
 		$item = $player->getInventory()->getItemInHand()->getID();
 		switch($item){
 			case 10:
-			$player->getInventory()->setItemInHand(Item::get(Item::AIR, 0, 0));
-			$player->sendMessage($this->prefix . C::RED . "You are not allowed to use lava");
-			return true;
+				$player->getInventory()->setItemInHand(Item::get(Item::AIR, 0, 0));
+				$player->sendMessage($this->prefix . C::RED . "You are not allowed to use lava");
+			break;
 			case 11:
-			$player->getInventory()->setItemInHand(Item::get(Item::AIR, 0, 0));
-			$player->sendMessage($this->prefix . C::RED . "You are not allowed to use lava");
-			return true;
+				$player->getInventory()->setItemInHand(Item::get(Item::AIR, 0, 0));
+				$player->sendMessage($this->prefix . C::RED . "You are not allowed to use lava");
+			break;
 		}
 	}
 }
